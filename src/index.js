@@ -4,8 +4,8 @@ import 'bootstrap/dist/css/bootstrap.css';
 import { Provider } from "react-redux";
 import store from "./redux/redux-store";
 import { BrowserRouter } from "react-router-dom";
-import Movies from "./Components/Movies/Movies";
-import Movie from "./Components/Movie/Movie";
+import Movies from "./components/Movies/Movies";
+import Movie from "./components/Movie/Movie";
 import { Route } from "react-router";
 
 

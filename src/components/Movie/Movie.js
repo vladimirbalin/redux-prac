@@ -2,15 +2,32 @@ import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { fetchingCurrentMovie } from "../../redux/movies-reducer";
 import { connect } from "react-redux";
-import { withRouter } from "react-router";
 import { compose } from "redux";
 import './movie.css';
 import Movies from "../Movies/Movies";
+import * as axios from 'axios';
+import clean from 'clean-tagged-string';
 
-const Movie = ({movie, fetchingCurrentMovie, ...props}) => {
+const Movie = ({movie={}, fetchingCurrentMovie, ...props}) => {
 
   useEffect(() => {
-    fetchingCurrentMovie(props.match.params.id)
+    //fetchingCurrentMovie(props.match.params.id)
+
+    const query = clean`{
+      movie(index:${props.match.params.id}) {
+        title,
+        cover,
+        year,
+        starring {
+          name
+        }
+      }
+    }`;
+
+    axios.get(`http://127.0.0.1:8000/q?query=${query}`)
+      .then(response => {
+        let responseMovie = response.data.data.movie;
+        fetchingCurrentMovie(responseMovie)})
   }, [props.match.params.id]);
 
   return (
@@ -49,7 +66,6 @@ const mapState = ({movies}) => ({
 });
 
 export default compose(
-  withRouter,
-  connect(mapState, {fetchingCurrentMovie: fetchingCurrentMovie}),
+  connect(mapState, {fetchingCurrentMovie}),
 )
 (Movie);

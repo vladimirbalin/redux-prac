@@ -10,7 +10,7 @@ const moviesReducer = handleActions({
   }),
   [FETCH_MOVIE]: (state, action) => ({
     ...state,
-    current: state.all[action.index - 1]
+    current: action.movie
   })
 }, {
   all: [],
@@ -22,9 +22,9 @@ export const fetchingAllMovies = (movies) => ({
   type: FETCH_MOVIES,
   movies
 });
-export const fetchingCurrentMovie = (index) => ({
+export const fetchingCurrentMovie = (movie) => ({
   type: FETCH_MOVIE,
-  index
+  movie
 });
 
 

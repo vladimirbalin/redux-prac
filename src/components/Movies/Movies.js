@@ -1,15 +1,28 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { fetchingAllMovies } from "../../redux/movies-reducer";
-import moviesJson from '../../movies.json';
 import { NavLink } from "react-router-dom";
 import { compose } from "redux";
 import { withRouter } from "react-router";
 import './movies.css';
+import * as axios from 'axios';
+import clean from 'clean-tagged-string';
 
-const Movies = ({movies, fetchingAllMovies, children, ...props}) => {
+const Movies = ({movies = [], fetchingAllMovies, children, ...props}) => {
   useEffect(() => {
-    fetchingAllMovies(moviesJson);
+    //fetchingAllMovies(moviesJson);
+    const query = clean`{
+      movies {
+        title,
+        cover
+      }
+    }`;
+    axios.get(`http://127.0.0.1:8000/q?query=${query}`)
+      .then(response => {
+        let responseMovies = response.data.data.movies;
+        fetchingAllMovies(responseMovies);
+      })
+
   }, []);
   return (
     <div className='app'>
