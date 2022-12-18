@@ -1,20 +1,21 @@
 import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import { fetchingCurrentMovie } from "../../redux/movies-reducer";
 import { connect } from "react-redux";
 import { compose } from "redux";
 import './movie.css';
 import Movies from "../Movies/Movies";
-import * as axios from 'axios';
+import axios from 'axios';
 import clean from 'clean-tagged-string';
 
 const Movie = ({movie={}, fetchingCurrentMovie, ...props}) => {
+  const { id: movieId } = useParams();
 
   useEffect(() => {
-    //fetchingCurrentMovie(props.match.params.id)
+    fetchingCurrentMovie(movieId)
 
     const query = clean`{
-      movie(index:${props.match.params.id}) {
+      movie(index:${movieId}) {
         title,
         cover,
         year,
@@ -28,7 +29,7 @@ const Movie = ({movie={}, fetchingCurrentMovie, ...props}) => {
       .then(response => {
         let responseMovie = response.data.data.movie;
         fetchingCurrentMovie(responseMovie)})
-  }, [props.match.params.id]);
+  }, [movieId]);
 
   return (
     <Movies>
